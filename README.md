@@ -37,3 +37,4 @@ Students will be notified about job / internship vaccancies relevant
 to their profile automaticall
 
 Postman Documentation Link : [HTM-final](https://documenter.getpostman.com/view/18148599/2s83fADBaf)
+Figma Design Link :[Figma](https://www.figma.com/file/tjlMfKgs9YmWAXukgc0sMJ/SIH-UI-UX-Design?node-id=0%3A1)
