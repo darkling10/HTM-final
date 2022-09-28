@@ -57,27 +57,31 @@ const userAdd = async (req, res) => {
   }
 
   async function createCompany(name, email, password, userType, res) {
-    const user = await Users.findOne({ email: email });
-    const userCompany = await Company.findOne({ email: email });
-    if (user || userCompany) {
-      return res.status(200).json({ error: "Email Already Registered" });
-    } else {
-      const newUser = new Users({
-        name: name,
-        email: email,
-        password: password,
-        userType: userType,
-      });
+    try {
+      const user = await Users.findOne({ email: email });
+      const userCompany = await Company.findOne({ email: email });
+      if (user || userCompany) {
+        return res.status(200).json({ error: "Email Already Registered" });
+      } else {
+        const newUser = new Users({
+          name: name,
+          email: email,
+          password: password,
+          userType: userType,
+        });
 
-      const newCompany = new Company({
-        name: name,
-        email: email,
-        _id: newUser._id,
-      });
-      await newUser.save();
-      await newCompany.save();
-      let myToken = await newUser.getAuthToken();
-      return res.status(200).json({ msg: "succussfull!!!", token: myToken });
+        const newCompany = new Company({
+          name: name,
+          email: email,
+          _id: newUser._id,
+        });
+        await newUser.save();
+        await newCompany.save();
+        let myToken = await newUser.getAuthToken();
+        return res.status(200).json({ msg: "succussfull!!!", token: myToken });
+      }
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
     }
   }
 };
@@ -121,6 +125,7 @@ const userLogin = async (req, res) => {
   } else if (userType === "company") {
     return loginUser(email, password, res);
   } else {
+    return res.status(400).json({ message: "Enter valid user type" });
   }
 };
 

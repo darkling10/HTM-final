@@ -58,90 +58,94 @@ const companyList = async (req, res) => {
 };
 
 const companyUpdate = async (req, res) => {
-  // try {
-  const authHeader = req.headers["x-access-token"];
-  const token = authHeader && authHeader.split(" ")[1];
-  const decoded = jwt.decode(token);
+  try {
+    const authHeader = req.headers["x-access-token"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const decoded = jwt.decode(token);
 
-  if (req.body.tag === "profile") {
-    const {
-      name,
-      headline,
-      dof,
-      email,
-      profileImage,
-      location,
-      companySize,
-      coverImage,
+    if (req.body.tag === "profile") {
+      const {
+        name,
+        headline,
+        dof,
+        email,
+        profileImage,
+        location,
+        companySize,
+        coverImage,
 
-      roles,
-    } = req.body.profile;
-    console.log(decoded.email);
-    let companyData = await Company.findByIdAndUpdate(decoded.id, {
-      $set: {
-        name: name,
-        roles: roles,
-        location: location,
-        dof: dof,
-        email: email,
-        headline: headline,
+        roles,
+      } = req.body.profile;
+      console.log(decoded.email);
+      let companyData = await Company.findByIdAndUpdate(decoded.id, {
+        $set: {
+          name: name,
+          roles: roles,
+          location: location,
+          dof: dof,
+          email: email,
+          headline: headline,
+          companySize: companySize,
+          coverPic: coverImage,
+          profileURL: profileImage,
+        },
+      }).catch((err) => {
+        console.log(err);
+      });
+
+      return res.status(200).json({ message: "Updated Successfully" });
+    } else if (req.body.tag === "about") {
+      const {
+        headquaters,
+        companySize,
+
+        industry,
+        about,
+        specialities,
+        website,
+
+        workspace,
+      } = req.body.about;
+      let companyData = await Company.findByIdAndUpdate(decoded.id, {
+        headquaters: headquaters,
+        about: about,
+        website: website,
+        industry: industry,
         companySize: companySize,
-        coverPic: coverImage,
-        profileURL: profileImage,
-      },
-    }).catch((err) => {
-      console.log(err);
-    });
+        workspace: workspace,
+        specialities: specialities,
+      });
 
-    return res.status(200).json({ message: "Updated Successfully" });
-  } else if (req.body.tag === "about") {
-    const {
-      headquaters,
-      companySize,
-
-      industry,
-      about,
-      specialities,
-      website,
-
-      workspace,
-    } = req.body.about;
-    let companyData = await Company.findByIdAndUpdate(decoded.id, {
-      headquaters: headquaters,
-      about: about,
-      website: website,
-      industry: industry,
-      companySize: companySize,
-      workspace: workspace,
-      specialities: specialities,
-    });
-
-    return res.status(200).json({ message: "Updated Successfully" });
+      return res.status(200).json({ message: "Updated Successfully" });
+    }
+  } catch (err) {
+    return res.status(400).json({ error: "Error" });
   }
-  // } catch (err) {
-  //   res.status(400).json({ error: "Error" });
-  // }
 };
 
 const changeJobStatus = async (req, res) => {
   const authHeader = req.headers["x-access-token"];
   const token = authHeader && authHeader.split(" ")[1];
   const decoded = jwt.decode(token);
-  if (decoded.userType === "company") {
-    const { jobID, studID, status } = req.body;
+  try {
+    if (decoded.userType === "company") {
+      const { jobID, studID, status } = req.body;
 
-    const changeStud = await Students.updateOne(
-      { id: studID, "appliedJobs.jobID": jobID },
-      {
-        $set: {
-          "appliedJobs.$.status": status,
-        },
-      }
-    );
+      const changeStud = await Students.updateOne(
+        { id: studID, "appliedJobs.jobID": jobID },
+        {
+          $set: {
+            "appliedJobs.$.status": status,
+          },
+        }
+      );
 
-    return res.json({ message: "Changed job status" });
-  } else {
-    return res.status(403).json({ message: "You need to be a student" });
+      return res.json({ message: "Changed job status" });
+    } else {
+      return res.status(403).json({ message: "You need to be a student" });
+    }
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
   }
 };
 

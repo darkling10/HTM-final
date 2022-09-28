@@ -46,16 +46,20 @@ const studentProfileUpdate = async (req, res) => {
 };
 
 async function showJobs(req, res) {
-  const authHeader = req.headers["x-access-token"];
-  const token = authHeader && authHeader.split(" ")[1];
-  const decoded = jwt.decode(token);
+  try {
+    const authHeader = req.headers["x-access-token"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const decoded = jwt.decode(token);
 
-  if (decoded.userType === "student") {
-    const allJobs = await Job.find({});
+    if (decoded.userType === "student") {
+      const allJobs = await Job.find({});
 
-    return res.status(200).json({ data: allJobs });
-  } else {
-    return res.status(403).json({ message: "You are not a student" });
+      return res.status(200).json({ data: allJobs });
+    } else {
+      return res.status(403).json({ message: "You are not a student" });
+    }
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
   }
 }
 
