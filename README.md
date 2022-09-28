@@ -36,6 +36,5 @@ relevant jobs and internships
 Students will be notified about job / internship vaccancies relevant
 to their profile automatically
 
-Postman Documentation Link : [HTM-final](https://documenter.getpostman.com/view/18148599/2s83fADBaf)
-
+Postman Documentation Link : [HTM-final](https://documenter.getpostman.com/view/18148599/2s83fADBaf) .....TODO by 3rd October 2022
 Figma Design Link : [Figma](https://www.figma.com/file/tjlMfKgs9YmWAXukgc0sMJ/SIH-UI-UX-Design?node-id=0%3A1)
